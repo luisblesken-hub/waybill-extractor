@@ -1,0 +1,7 @@
+streamlit
+anthropic
+openai
+instructor
+pydantic
+pdfplumber
+python-dotenv
