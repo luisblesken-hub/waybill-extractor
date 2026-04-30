@@ -1,240 +1,533 @@
 """
-DocExtract Pro — Landing Page
+DocExtract Pro — Enterprise Landing Page
+Design: Dark professional, inspired by Vercel / Linear
 """
 import streamlit as st
-import os
 
 st.set_page_config(
-    page_title="DocExtract Pro — Logistik KI",
+    page_title="DocExtract Pro — Logistics AI",
     page_icon="🚢",
     layout="wide"
 )
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-.hero-section {
-    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-    padding: 5rem 3rem;
-    border-radius: 24px;
-    color: white;
-    text-align: center;
-    margin-bottom: 3rem;
+*, html, body, [class*="css"] {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    -webkit-font-smoothing: antialiased;
 }
-.hero-section h1 { font-size: 3.5rem; font-weight: 800; margin: 0; line-height: 1.1; }
-.hero-section p  { font-size: 1.3rem; opacity: 0.85; margin: 1.5rem 0; max-width: 600px; margin-left: auto; margin-right: auto; }
-.hero-badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 4px 16px; font-size: 0.85rem; display: inline-block; margin-bottom: 1.5rem; }
 
-.feature-card {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 16px;
-    padding: 2rem;
-    height: 100%;
-    transition: all 0.2s;
+/* Hide Streamlit chrome */
+#MainMenu, footer, header { visibility: hidden; }
+.stDeployButton { display: none; }
+[data-testid="stToolbar"] { display: none; }
+.block-container { padding: 0 !important; max-width: 100% !important; }
+section[data-testid="stSidebar"] { display: none; }
+
+body { background: #09090b; color: #fafafa; }
+
+/* ── NAV ─────────────────────────────── */
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 4rem;
+    border-bottom: 1px solid #1f1f23;
+    background: rgba(9,9,11,0.8);
+    backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
-.feature-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.1); transform: translateY(-2px); }
-.feature-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-.feature-title { font-size: 1.2rem; font-weight: 700; color: #111827; margin-bottom: 0.5rem; }
-.feature-desc { color: #6b7280; line-height: 1.6; }
+.nav-logo { font-size: 1.1rem; font-weight: 700; color: #fafafa; letter-spacing: -0.02em; }
+.nav-links { display: flex; gap: 2.5rem; }
+.nav-links a { color: #a1a1aa; font-size: 0.875rem; text-decoration: none; transition: color 0.15s; }
+.nav-links a:hover { color: #fafafa; }
+.nav-cta {
+    background: #fafafa; color: #09090b;
+    padding: 0.5rem 1.25rem; border-radius: 6px;
+    font-size: 0.875rem; font-weight: 600;
+    cursor: pointer; border: none;
+    transition: background 0.15s;
+}
 
-.pricing-card {
-    border: 2px solid #e5e7eb;
-    border-radius: 16px;
-    padding: 2rem;
+/* ── HERO ────────────────────────────── */
+.hero-wrap {
+    padding: 7rem 4rem 5rem;
     text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: #18181b; border: 1px solid #27272a;
+    border-radius: 100px; padding: 0.35rem 1rem;
+    font-size: 0.8rem; color: #a1a1aa;
+    margin-bottom: 2rem;
+}
+.hero-badge span { color: #22d3ee; font-weight: 600; }
+.hero-h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    color: #fafafa;
+    margin: 0 0 1.5rem;
+}
+.hero-h1 em { font-style: normal; color: #22d3ee; }
+.hero-sub {
+    font-size: 1.2rem;
+    color: #71717a;
+    max-width: 560px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+    font-weight: 400;
+}
+.hero-actions {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+}
+.btn-primary {
+    background: #fafafa; color: #09090b;
+    padding: 0.75rem 2rem; border-radius: 8px;
+    font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; border: none;
+    transition: all 0.15s;
+    text-decoration: none;
+}
+.btn-secondary {
+    background: transparent; color: #fafafa;
+    padding: 0.75rem 2rem; border-radius: 8px;
+    font-size: 0.95rem; font-weight: 500;
+    cursor: pointer;
+    border: 1px solid #27272a;
+    transition: all 0.15s;
+    text-decoration: none;
+}
+.btn-secondary:hover { border-color: #52525b; }
+
+/* ── STATS BAR ───────────────────────── */
+.stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    border-top: 1px solid #18181b;
+    border-bottom: 1px solid #18181b;
+    margin: 0;
+    padding: 2.5rem 4rem;
+    background: #09090b;
+}
+.stat-item {
+    flex: 1;
+    text-align: center;
+    padding: 0 2rem;
+    border-right: 1px solid #18181b;
+}
+.stat-item:last-child { border-right: none; }
+.stat-value { font-size: 2.5rem; font-weight: 800; color: #fafafa; letter-spacing: -0.04em; }
+.stat-label { font-size: 0.8rem; color: #52525b; margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ── SECTION ─────────────────────────── */
+.section { padding: 6rem 4rem; max-width: 1200px; margin: 0 auto; }
+.section-label {
+    font-size: 0.75rem; color: #22d3ee; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+.section-title {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700; color: #fafafa;
+    letter-spacing: -0.03em; line-height: 1.2;
+    margin: 0 0 1rem;
+}
+.section-sub { font-size: 1.05rem; color: #71717a; max-width: 480px; line-height: 1.7; }
+
+/* ── FEATURE GRID ────────────────────── */
+.feat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #18181b;
+    border: 1px solid #18181b;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 4rem;
+}
+.feat-cell {
+    background: #09090b;
+    padding: 2rem;
+    transition: background 0.15s;
+}
+.feat-cell:hover { background: #0f0f12; }
+.feat-icon {
+    width: 40px; height: 40px;
+    background: #18181b; border: 1px solid #27272a;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; margin-bottom: 1.25rem;
+}
+.feat-title { font-size: 0.95rem; font-weight: 600; color: #fafafa; margin-bottom: 0.5rem; }
+.feat-desc  { font-size: 0.875rem; color: #71717a; line-height: 1.6; }
+
+/* ── FIELDS TABLE ────────────────────── */
+.fields-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: #18181b;
+    border: 1px solid #18181b;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 3rem;
+}
+.fields-col { background: #09090b; padding: 1.5rem; }
+.fields-col-title { font-size: 0.75rem; font-weight: 600; color: #52525b; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1rem; }
+.field-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.85rem; color: #a1a1aa;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid #18181b;
+}
+.field-item:last-child { border-bottom: none; }
+.field-dot { width: 6px; height: 6px; border-radius: 50%; background: #22d3ee; flex-shrink: 0; }
+
+/* ── PRICING ─────────────────────────── */
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 3rem;
+}
+.price-card {
+    background: #0f0f12;
+    border: 1px solid #1f1f23;
+    border-radius: 12px;
+    padding: 1.75rem;
     position: relative;
+    transition: border-color 0.15s;
 }
-.pricing-card.popular {
-    border-color: #3b82f6;
-    box-shadow: 0 4px 20px rgba(59,130,246,0.2);
+.price-card:hover { border-color: #3f3f46; }
+.price-card.featured {
+    border-color: #22d3ee;
+    background: #0c1a1f;
 }
-.popular-badge {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #3b82f6;
-    color: white;
-    padding: 3px 16px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
+.price-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: #22d3ee; color: #09090b;
+    padding: 2px 14px; border-radius: 100px;
+    font-size: 0.75rem; font-weight: 700;
+    white-space: nowrap;
 }
-.price-amount { font-size: 3rem; font-weight: 800; color: #111827; }
-.price-per    { font-size: 0.9rem; color: #6b7280; }
-.price-name   { font-size: 1.2rem; font-weight: 700; color: #111827; margin-bottom: 0.5rem; }
+.price-name  { font-size: 0.875rem; font-weight: 600; color: #a1a1aa; margin-bottom: 0.75rem; }
+.price-amount { font-size: 2.25rem; font-weight: 800; color: #fafafa; letter-spacing: -0.04em; line-height: 1; }
+.price-period { font-size: 0.8rem; color: #52525b; margin-top: 0.25rem; margin-bottom: 1.25rem; }
+.price-divider { border: none; border-top: 1px solid #1f1f23; margin: 1.25rem 0; }
+.price-feature { font-size: 0.8rem; color: #71717a; padding: 0.3rem 0; display: flex; align-items: center; gap: 0.5rem; }
+.price-feature::before { content: "✓"; color: #22d3ee; font-weight: 700; font-size: 0.75rem; }
+.price-btn {
+    display: block; width: 100%;
+    padding: 0.6rem;
+    border-radius: 6px;
+    font-size: 0.85rem; font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 1.25rem;
+    border: 1px solid #27272a;
+    background: transparent;
+    color: #fafafa;
+    transition: all 0.15s;
+    text-decoration: none;
+}
+.price-card.featured .price-btn {
+    background: #22d3ee; color: #09090b; border-color: transparent;
+}
 
-.stat-big { font-size: 3rem; font-weight: 800; color: #1d4ed8; }
-.stat-lbl { font-size: 0.85rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
+/* ── TESTIMONIALS ────────────────────── */
+.testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 3rem; }
+.testi-card {
+    background: #0f0f12;
+    border: 1px solid #1f1f23;
+    border-radius: 12px;
+    padding: 1.75rem;
+}
+.testi-quote { font-size: 0.9rem; color: #a1a1aa; line-height: 1.75; margin-bottom: 1.25rem; }
+.testi-author { font-size: 0.85rem; font-weight: 600; color: #fafafa; }
+.testi-role   { font-size: 0.8rem; color: #52525b; }
+.testi-stars  { color: #eab308; font-size: 0.8rem; margin-bottom: 0.75rem; }
 
-.testimonial {
-    background: #f9fafb;
+/* ── CTA BLOCK ───────────────────────── */
+.cta-block {
+    border: 1px solid #1f1f23;
     border-radius: 16px;
-    padding: 1.5rem;
-    border-left: 4px solid #3b82f6;
+    padding: 4rem;
+    text-align: center;
+    background: linear-gradient(135deg, #0f1a1f 0%, #0f0f12 100%);
+    margin: 0 4rem 6rem;
 }
-.testimonial-text  { font-style: italic; color: #374151; line-height: 1.7; }
-.testimonial-author { font-weight: 600; color: #111827; margin-top: 0.75rem; }
-.testimonial-role  { font-size: 0.85rem; color: #6b7280; }
+.cta-title { font-size: 2.25rem; font-weight: 700; color: #fafafa; letter-spacing: -0.03em; margin: 0 0 1rem; }
+.cta-sub   { font-size: 1rem; color: #71717a; margin: 0 0 2rem; }
 
-footer { visibility: hidden; }
+/* ── FOOTER ──────────────────────────── */
+.footer {
+    border-top: 1px solid #18181b;
+    padding: 2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #52525b;
+    font-size: 0.8rem;
+}
 </style>
 """, unsafe_allow_html=True)
 
-# ── Hero ──────────────────────────────────────────────────────────────────────
+# NAV
 st.markdown("""
-<div class="hero-section">
-    <div class="hero-badge">🚀 Enterprise KI für Logistik</div>
-    <h1>Sea Waybills in<br>Sekunden auslesen</h1>
-    <p>Schluss mit manuellem Abtippen. DocExtract Pro extrahiert alle Logistikdaten
-       automatisch — 100% präzise, sofort einsatzbereit.</p>
-    <div style="margin-top:2rem; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
-        <div style="background:#3b82f6;color:white;padding:12px 28px;border-radius:10px;font-weight:700;font-size:1.1rem;">
-            Demo starten →
+<nav class="nav">
+    <div class="nav-logo">🚢 DocExtract Pro</div>
+    <div class="nav-links">
+        <a href="#">Produkt</a>
+        <a href="#">Preise</a>
+        <a href="#">Dokumentation</a>
+        <a href="#">API</a>
+    </div>
+    <button class="nav-cta">Kostenlos testen</button>
+</nav>
+""", unsafe_allow_html=True)
+
+# HERO
+st.markdown("""
+<div style="padding: 7rem 4rem 5rem; text-align: center; max-width: 900px; margin: 0 auto;">
+    <div class="hero-badge">
+        <span>Neu</span> · Jetzt mit Batch-Verarbeitung und Webhook-Support
+    </div>
+    <h1 class="hero-h1">
+        Logistikdokumente<br>
+        <em>automatisch auslesen</em>
+    </h1>
+    <p class="hero-sub">
+        DocExtract Pro extrahiert alle Daten aus Sea Waybills, Bills of Lading und Rechnungen —
+        in Sekunden, mit KI-Präzision, direkt in dein System.
+    </p>
+    <div class="hero-actions">
+        <a href="/" class="btn-primary">Demo starten →</a>
+        <a href="#" class="btn-secondary">API Docs ansehen</a>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# STATS
+st.markdown("""
+<div class="stats-bar">
+    <div class="stat-item">
+        <div class="stat-value">&lt;10s</div>
+        <div class="stat-label">Extraktionszeit</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-value">15+</div>
+        <div class="stat-label">Felder pro Dokument</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-value">98%</div>
+        <div class="stat-label">Genauigkeit</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-value">€0.49</div>
+        <div class="stat-label">Pro Dokument</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-value">∞</div>
+        <div class="stat-label">Batch-Größe</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# FEATURES
+st.markdown("""
+<div class="section">
+    <div class="section-label">Funktionen</div>
+    <div class="section-title">Alles was Enterprise braucht</div>
+    <div class="section-sub">Von der Extraktion bis zur Integration — vollständig abgedeckt.</div>
+    <div class="feat-grid">
+        <div class="feat-cell">
+            <div class="feat-icon">🤖</div>
+            <div class="feat-title">KI-Extraktion</div>
+            <div class="feat-desc">Claude AI liest jedes Dokument mit Zero-Hallucination-Garantie via Pydantic-Validierung.</div>
         </div>
-        <div style="background:rgba(255,255,255,0.15);color:white;padding:12px 28px;border-radius:10px;font-weight:600;font-size:1.1rem;border:1px solid rgba(255,255,255,0.3);">
-            Angebot anfragen
+        <div class="feat-cell">
+            <div class="feat-icon">🔄</div>
+            <div class="feat-title">Batch-Verarbeitung</div>
+            <div class="feat-desc">Hunderte PDFs gleichzeitig. Parallel verarbeitet, komplett exportiert.</div>
+        </div>
+        <div class="feat-cell">
+            <div class="feat-icon">🔑</div>
+            <div class="feat-title">REST API</div>
+            <div class="feat-desc">Direkte Integration in SAP, TMS und eigene Systeme via API Key.</div>
+        </div>
+        <div class="feat-cell">
+            <div class="feat-icon">🔔</div>
+            <div class="feat-title">Webhooks</div>
+            <div class="feat-desc">Ergebnisse automatisch in dein System pushen, sobald fertig.</div>
+        </div>
+        <div class="feat-cell">
+            <div class="feat-icon">📊</div>
+            <div class="feat-title">Audit-Dashboard</div>
+            <div class="feat-desc">Vollständige History, Kosten, Erfolgsraten und CSV-Export.</div>
+        </div>
+        <div class="feat-cell">
+            <div class="feat-icon">🛡️</div>
+            <div class="feat-title">DSGVO-konform</div>
+            <div class="feat-desc">EU-Hosting. Keine Dokumentenspeicherung. Row-Level Security.</div>
         </div>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-# ── Stats ─────────────────────────────────────────────────────────────────────
-c1, c2, c3, c4 = st.columns(4)
-for col, num, label in [
-    (c1, "10s",  "Durchschnittliche Extraktionszeit"),
-    (c2, "15+",  "Extrahierte Felder pro Dokument"),
-    (c3, "98%",  "Extraktionsgenauigkeit"),
-    (c4, "€0.49","Kosten pro Dokument"),
-]:
-    with col:
-        st.markdown(f"""
-        <div style="text-align:center;padding:1.5rem;background:white;border:1px solid #e5e7eb;border-radius:12px;">
-            <div class="stat-big">{num}</div>
-            <div class="stat-lbl">{label}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-# ── Features ──────────────────────────────────────────────────────────────────
-st.markdown("## ✨ Alles was du brauchst")
-st.markdown("<br>", unsafe_allow_html=True)
-
-f1, f2, f3 = st.columns(3)
-features = [
-    (f1, "🤖", "KI-Extraktion", "Claude AI liest Sea Waybills, Bills of Lading, Rechnungen und mehr — automatisch, ohne Konfiguration."),
-    (f2, "🔄", "Batch-Verarbeitung", "Lade hunderte PDFs gleichzeitig hoch. Alle werden parallel verarbeitet und als CSV/Excel/JSON exportiert."),
-    (f3, "🔑", "REST API", "Direktintegration in SAP, TMS oder eigene Systeme via REST API mit API Key Authentication."),
-]
-for col, icon, title, desc in features:
-    with col:
-        st.markdown(f"""
-        <div class="feature-card">
-            <div class="feature-icon">{icon}</div>
-            <div class="feature-title">{title}</div>
-            <div class="feature-desc">{desc}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-f4, f5, f6 = st.columns(3)
-features2 = [
-    (f4, "📊", "Dashboard & Audit Log", "Vollständige Übersicht aller Extraktionen mit Zeitstempel, Kosten und Exportfunktion."),
-    (f5, "🔔", "Webhook-Support", "Erhalte Ergebnisse automatisch in dein System gesendet, sobald die Extraktion fertig ist."),
-    (f6, "🛡️", "Datenschutz (DSGVO)", "Daten werden in der EU verarbeitet. Keine Speicherung der Dokumentinhalte. ISO 27001 konform."),
-]
-for col, icon, title, desc in features2:
-    with col:
-        st.markdown(f"""
-        <div class="feature-card">
-            <div class="feature-icon">{icon}</div>
-            <div class="feature-title">{title}</div>
-            <div class="feature-desc">{desc}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-st.markdown("<br><br>", unsafe_allow_html=True)
-
-# ── Extracted Fields ──────────────────────────────────────────────────────────
-st.markdown("## 📋 Alle extrahierten Felder")
-col1, col2, col3, col4 = st.columns(4)
-field_groups = [
-    ("📄 Dokument", ["Dokumenttyp", "Dokumentnummer", "Ausstellungsdatum", "Ausstellungsort", "Buchungsnummer"]),
-    ("🤝 Parteien", ["Absender (Name + Adresse)", "Empfänger", "Notify Party", "Spediteur", "Frachtführer"]),
-    ("🚢 Transport", ["Schiffsname + IMO", "Voyage-Nummer", "Verladehafen", "Löschhafen", "ETD / ETA"]),
-    ("📦 Ladung", ["Container-Nummern", "Container-Typen", "Gewicht (brutto/netto)", "Volumen CBM", "HS-Codes"]),
-]
-for col, (title, fields) in zip([col1, col2, col3, col4], field_groups):
-    with col:
-        st.markdown(f"**{title}**")
-        for f in fields:
-            st.markdown(f"✓ {f}")
-
-st.markdown("<br><br>", unsafe_allow_html=True)
-
-# ── Pricing ───────────────────────────────────────────────────────────────────
-st.markdown("## 💳 Preise")
-st.markdown("Pay-as-you-go — keine Monatsgebühren, keine Mindestlaufzeit.")
-st.markdown("<br>", unsafe_allow_html=True)
-
-p1, p2, p3, p4 = st.columns(4)
-plans = [
-    (p1, False, "Starter",    "€4.90",   "10 Credits",    "€0.49/Doc",   "Für den Einstieg"),
-    (p2, True,  "Business",   "€19.90",  "50 Credits",    "€0.40/Doc",   "Beliebteste Wahl"),
-    (p3, False, "Pro",        "€69.90",  "200 Credits",   "€0.35/Doc",   "Für hohes Volumen"),
-    (p4, False, "Enterprise", "Auf Anfrage", "Unbegrenzt", "Individuell", "Ab 1.000 Docs/Monat"),
-]
-for col, popular, name, price, credits, per_doc, desc in plans:
-    with col:
-        badge = '<div class="popular-badge">⭐ Empfohlen</div>' if popular else ''
-        border = "popular" if popular else ""
-        st.markdown(f"""
-        <div class="pricing-card {border}">
-            {badge}
-            <div class="price-name">{name}</div>
-            <div class="price-amount">{price}</div>
-            <div class="price-per">{credits} · {per_doc}</div>
-            <hr style="margin:1rem 0;border-color:#e5e7eb;">
-            <div style="color:#6b7280;font-size:0.9rem;">{desc}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-st.markdown("<br><br>", unsafe_allow_html=True)
-
-# ── Testimonials ──────────────────────────────────────────────────────────────
-st.markdown("## 💬 Was unsere Kunden sagen")
-st.markdown("<br>", unsafe_allow_html=True)
-
-t1, t2, t3 = st.columns(3)
-testimonials = [
-    (t1, "Wir verarbeiten täglich 300+ Sea Waybills. Mit DocExtract sparen wir 2 Stunden Abtippen pro Tag — bei 100% Genauigkeit.", "Thomas K.", "Operations Manager, Hamburg"),
-    (t2, "Die API-Integration in unser TMS war in einem Nachmittag erledigt. Absolut empfehlenswert.", "Maria L.", "IT-Leiterin, Bremen"),
-    (t3, "Endlich keine Tippfehler mehr bei der Dateneingabe. Das Tool zahlt sich in der ersten Woche aus.", "Andreas M.", "Geschäftsführer, Frankfurt"),
-]
-for col, text, author, role in testimonials:
-    with col:
-        st.markdown(f"""
-        <div class="testimonial">
-            <div class="testimonial-text">"{text}"</div>
-            <div class="testimonial-author">{author}</div>
-            <div class="testimonial-role">{role}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-st.markdown("<br><br>", unsafe_allow_html=True)
-
-# ── CTA ───────────────────────────────────────────────────────────────────────
+# FIELDS
 st.markdown("""
-<div style="background:linear-gradient(135deg,#1d4ed8,#2563eb);padding:3rem;border-radius:16px;text-align:center;color:white;">
-    <h2 style="margin:0;font-size:2rem;">Bereit loszulegen?</h2>
-    <p style="opacity:0.85;margin:1rem 0;">3 kostenlose Extraktionen — keine Kreditkarte nötig.</p>
-    <div style="background:white;color:#1d4ed8;display:inline-block;padding:12px 32px;border-radius:10px;font-weight:700;font-size:1.1rem;margin-top:0.5rem;">
-        Kostenlos testen →
+<div class="section" style="padding-top: 0;">
+    <div class="section-label">Datenfelder</div>
+    <div class="section-title">15+ Felder pro Dokument</div>
+    <div class="fields-grid">
+        <div class="fields-col">
+            <div class="fields-col-title">Dokument</div>
+            <div class="field-item"><div class="field-dot"></div>Dokumenttyp</div>
+            <div class="field-item"><div class="field-dot"></div>Dokumentnummer</div>
+            <div class="field-item"><div class="field-dot"></div>Ausstellungsdatum</div>
+            <div class="field-item"><div class="field-dot"></div>Buchungsnummer</div>
+            <div class="field-item"><div class="field-dot"></div>Purchase Order</div>
+        </div>
+        <div class="fields-col">
+            <div class="fields-col-title">Parteien</div>
+            <div class="field-item"><div class="field-dot"></div>Absender + Adresse</div>
+            <div class="field-item"><div class="field-dot"></div>Empfänger + Adresse</div>
+            <div class="field-item"><div class="field-dot"></div>Notify Party</div>
+            <div class="field-item"><div class="field-dot"></div>Spediteur</div>
+            <div class="field-item"><div class="field-dot"></div>Frachtführer</div>
+        </div>
+        <div class="fields-col">
+            <div class="fields-col-title">Transport</div>
+            <div class="field-item"><div class="field-dot"></div>Schiff + IMO</div>
+            <div class="field-item"><div class="field-dot"></div>Voyage-Nummer</div>
+            <div class="field-item"><div class="field-dot"></div>Verladehafen</div>
+            <div class="field-item"><div class="field-dot"></div>Löschhafen</div>
+            <div class="field-item"><div class="field-dot"></div>ETD / ETA</div>
+        </div>
+        <div class="fields-col">
+            <div class="fields-col-title">Ladung</div>
+            <div class="field-item"><div class="field-dot"></div>Container-Nummern</div>
+            <div class="field-item"><div class="field-dot"></div>Container-Typen</div>
+            <div class="field-item"><div class="field-dot"></div>Gewicht + CBM</div>
+            <div class="field-item"><div class="field-dot"></div>HS-Codes</div>
+            <div class="field-item"><div class="field-dot"></div>Incoterms</div>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# PRICING
+st.markdown("""
+<div class="section" style="padding-top: 0;">
+    <div class="section-label">Preise</div>
+    <div class="section-title">Pay-as-you-go</div>
+    <div class="section-sub">Keine Monatsgebühren. Keine Mindestlaufzeit.</div>
+    <div class="pricing-grid">
+        <div class="price-card">
+            <div class="price-name">Starter</div>
+            <div class="price-amount">€4.90</div>
+            <div class="price-period">10 Credits · €0.49/Doc</div>
+            <hr class="price-divider">
+            <div class="price-feature">10 Dokumente</div>
+            <div class="price-feature">CSV + JSON Export</div>
+            <div class="price-feature">Dashboard</div>
+            <a href="#" class="price-btn">Kaufen</a>
+        </div>
+        <div class="price-card featured">
+            <div class="price-badge">Beliebt</div>
+            <div class="price-name">Business</div>
+            <div class="price-amount">€19.90</div>
+            <div class="price-period">50 Credits · €0.40/Doc</div>
+            <hr class="price-divider">
+            <div class="price-feature">50 Dokumente</div>
+            <div class="price-feature">CSV + JSON + Excel</div>
+            <div class="price-feature">API Keys</div>
+            <div class="price-feature">Webhooks</div>
+            <a href="#" class="price-btn">Kaufen</a>
+        </div>
+        <div class="price-card">
+            <div class="price-name">Pro</div>
+            <div class="price-amount">€69.90</div>
+            <div class="price-period">200 Credits · €0.35/Doc</div>
+            <hr class="price-divider">
+            <div class="price-feature">200 Dokumente</div>
+            <div class="price-feature">Batch-Verarbeitung</div>
+            <div class="price-feature">Email-Benachrichtigungen</div>
+            <div class="price-feature">Priority Support</div>
+            <a href="#" class="price-btn">Kaufen</a>
+        </div>
+        <div class="price-card">
+            <div class="price-name">Enterprise</div>
+            <div class="price-amount">Custom</div>
+            <div class="price-period">Ab 1.000 Docs/Monat</div>
+            <hr class="price-divider">
+            <div class="price-feature">Unbegrenzte Dokumente</div>
+            <div class="price-feature">SLA-Garantie</div>
+            <div class="price-feature">Dedicated Support</div>
+            <div class="price-feature">On-Premise Option</div>
+            <a href="#" class="price-btn">Anfragen</a>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# TESTIMONIALS
+st.markdown("""
+<div class="section" style="padding-top: 0;">
+    <div class="section-label">Referenzen</div>
+    <div class="section-title">Vertraut von Spediteuren</div>
+    <div class="testi-grid">
+        <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <div class="testi-quote">"Wir verarbeiten täglich 300+ Sea Waybills. Mit DocExtract sparen wir 2 Stunden Abtippen pro Tag."</div>
+            <div class="testi-author">Thomas K.</div>
+            <div class="testi-role">Operations Manager · Hamburg</div>
+        </div>
+        <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <div class="testi-quote">"API-Integration in unser TMS in einem Nachmittag erledigt. Dokumentation ist exzellent."</div>
+            <div class="testi-author">Maria L.</div>
+            <div class="testi-role">IT-Leiterin · Bremen</div>
+        </div>
+        <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <div class="testi-quote">"Keine Tippfehler mehr. Das Tool zahlt sich in der ersten Woche aus."</div>
+            <div class="testi-author">Andreas M.</div>
+            <div class="testi-role">Geschäftsführer · Frankfurt</div>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# CTA
+st.markdown("""
+<div class="cta-block">
+    <div class="cta-title">Bereit loszulegen?</div>
+    <div class="cta-sub">3 kostenlose Extraktionen — keine Kreditkarte nötig.</div>
+    <div style="display:flex;gap:1rem;justify-content:center;">
+        <a href="/" class="btn-primary">Demo starten →</a>
+        <a href="#" class="btn-secondary">Sales kontaktieren</a>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# FOOTER
+st.markdown("""
+<div class="footer">
+    <div>© 2026 DocExtract Pro · Alle Rechte vorbehalten</div>
+    <div style="display:flex;gap:2rem;">
+        <a href="#" style="color:#52525b;text-decoration:none;">Datenschutz</a>
+        <a href="#" style="color:#52525b;text-decoration:none;">Impressum</a>
+        <a href="#" style="color:#52525b;text-decoration:none;">support@docextract.pro</a>
     </div>
 </div>
 """, unsafe_allow_html=True)
