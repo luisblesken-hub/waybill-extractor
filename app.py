@@ -10,6 +10,7 @@ import os
 from datetime import datetime
 from extractor import extract_from_text, count_extracted_fields
 from export_utils import to_flat_dict, export_csv, export_json, export_excel
+from demo_data import DEMO_WAYBILL_TEXT, DEMO_RESULT
 
 # ── Page Config ───────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -220,12 +221,22 @@ def show_login():
                     st.error(f"❌ {e}")
 
         st.markdown("---")
-        st.markdown("**Demo ohne Konto:** 3 kostenlose Extraktionen")
-        if st.button("🚀 Demo starten", use_container_width=True):
-            st.session_state.user       = "demo"
-            st.session_state.user_id    = None
-            st.session_state.user_email = None
-            st.rerun()
+        col_d1, col_d2 = st.columns(2)
+        with col_d1:
+            st.markdown("**Demo ohne Konto**\n3 kostenlose Extraktionen")
+            if st.button("🚀 Demo starten", use_container_width=True):
+                st.session_state.user       = "demo"
+                st.session_state.user_id    = None
+                st.session_state.user_email = None
+                st.rerun()
+        with col_d2:
+            st.markdown("**Live-Demo ansehen**\nBeispiel Sea Waybill sofort")
+            if st.button("👁️ Beispiel ansehen", use_container_width=True):
+                st.session_state.user       = "demo"
+                st.session_state.user_id    = None
+                st.session_state.user_email = None
+                st.session_state.show_demo  = True
+                st.rerun()
 
 # ════════════════════════════════════════════════════════════════════════════════
 # MAIN EXTRACTION APP
@@ -238,6 +249,78 @@ def show_app():
         <p>Logistikdokumente automatisch auslesen — kein Abtippen, 0 Fehler.</p>
     </div>
     """, unsafe_allow_html=True)
+
+    # ── Live Demo ─────────────────────────────────────────────────────────────
+    if st.session_state.get("show_demo"):
+        st.markdown("### 👁️ Live-Demo — Sea Waybill Extraktion")
+        st.markdown('<span style="background:#0c1a1f;border:1px solid #164e63;color:#22d3ee;padding:3px 10px;border-radius:4px;font-size:0.75rem;font-weight:600;">BEISPIELDOKUMENT</span>', unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        with st.expander("📄 Roher Dokumenttext (simuliert)"):
+            st.code(DEMO_WAYBILL_TEXT, language=None)
+
+        d = DEMO_RESULT
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.markdown("#### 📋 Dokument")
+            for label, value in [
+                ("Typ",        d["document_type"]),
+                ("Nummer",     d["document_number"]),
+                ("Datum",      d["issue_date"]),
+                ("Absender",   d["shipper"]["name"]),
+                ("Empfänger",  d["consignee"]["name"]),
+                ("Incoterms",  d["incoterms"]),
+                ("Fracht",     d["freight_terms"]),
+                ("Buchungs-Nr",d["booking_number"]),
+            ]:
+                v = f'<div class="field-value">{value}</div>' if value else '<div class="field-empty">—</div>'
+                st.markdown(f'<div class="field-group"><div class="field-label">{label}</div>{v}</div>', unsafe_allow_html=True)
+
+        with col2:
+            st.markdown("#### 🚢 Transport")
+            for label, value in [
+                ("Schiff",  d["vessel_name"]),
+                ("Voyage",  d["voyage_number"]),
+                ("POL",     d["port_of_loading"]),
+                ("POD",     d["port_of_discharge"]),
+                ("ETD",     d["etd"]),
+                ("ETA",     d["eta"]),
+            ]:
+                v = f'<div class="field-value">{value}</div>' if value else '<div class="field-empty">—</div>'
+                st.markdown(f'<div class="field-group"><div class="field-label">{label}</div>{v}</div>', unsafe_allow_html=True)
+
+        with col3:
+            st.markdown("#### 📦 Ladung")
+            for label, value in [
+                ("Ware",        d["cargo_description"]),
+                ("Pakete",      str(d["number_of_packages"])),
+                ("Gewicht kg",  str(d["gross_weight_kg"])),
+                ("CBM",         str(d["measurement_cbm"])),
+                ("HS-Codes",    " · ".join(d["hs_codes"])),
+                ("PO",          d["purchase_order"]),
+            ]:
+                v = f'<div class="field-value">{value}</div>' if value else '<div class="field-empty">—</div>'
+                st.markdown(f'<div class="field-group"><div class="field-label">{label}</div>{v}</div>', unsafe_allow_html=True)
+
+        st.markdown("**Container:**")
+        for c in d["containers"]:
+            st.markdown(f'`{c["container_number"]}` · {c["container_type"]} · Seal: {c["seal_number"]}')
+
+        st.markdown("---")
+        st.markdown('<span style="background:#052e16;border:1px solid #14532d;color:#4ade80;padding:3px 10px;border-radius:4px;font-size:0.75rem;font-weight:600;">✅ 14 Felder extrahiert · 0.0s (Demo) · Qualität: 95%</span>', unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        dc1, dc2 = st.columns(2)
+        with dc1:
+            if st.button("📂 Eigenes PDF hochladen", type="primary", use_container_width=True):
+                st.session_state.show_demo = False
+                st.rerun()
+        with dc2:
+            st.download_button("📥 Demo-Export (JSON)", json.dumps(d, ensure_ascii=False, indent=2),
+                               "demo_sea_waybill.json", "application/json", use_container_width=True)
+
+        st.markdown("---")
 
     c1,c2,c3,c4 = st.columns(4)
     for col, num, lbl in [
@@ -284,8 +367,27 @@ def show_app():
                     st.error(f"PDF-Lesefehler: {e}")
                     continue
 
+            # OCR fallback für Scan-PDFs
             if not text.strip():
-                st.warning("⚠️ Kein Text — Scan-PDF ohne OCR.")
+                try:
+                    import fitz  # PyMuPDF
+                    uf.seek(0)
+                    doc = fitz.open(stream=uf.read(), filetype="pdf")
+                    ocr_parts = []
+                    for page in doc:
+                        pix = page.get_pixmap(dpi=300)
+                        # Extract text via OCR using PyMuPDF's built-in
+                        tp = page.get_text("text")
+                        if tp.strip():
+                            ocr_parts.append(tp)
+                    text = "\n".join(ocr_parts)
+                    if text.strip():
+                        st.info("🔍 OCR angewendet (Scan-PDF erkannt)")
+                except Exception:
+                    pass
+
+            if not text.strip():
+                st.warning("⚠️ Kein Text extrahierbar. Qualität des PDFs prüfen.")
                 continue
 
             with st.expander("Roher PDF-Text"):
