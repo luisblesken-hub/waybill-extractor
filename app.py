@@ -44,14 +44,26 @@ st.markdown("""
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
     -webkit-font-smoothing: antialiased;
 }
-.stApp, [data-testid="stAppViewContainer"] { background: #09090b !important; }
+.stApp, [data-testid="stAppViewContainer"],
+[data-testid="stHeader"], header { background: #09090b !important; }
+[data-testid="stToolbar"] { display: none !important; }
+[data-testid="stDecoration"] { display: none !important; }
 [data-testid="stSidebar"] { background: #0f0f12 !important; border-right: 1px solid #1f1f23 !important; }
 [data-testid="stSidebar"] * { color: #a1a1aa !important; }
 [data-testid="stSidebar"] h2 { color: #fafafa !important; }
 .stMarkdown p, .stText { color: #a1a1aa; }
 h1,h2,h3,h4 { color: #fafafa !important; letter-spacing: -0.02em; }
-footer, #MainMenu { visibility: hidden; }
+footer, #MainMenu { visibility: hidden !important; }
 hr { border-color: #1f1f23 !important; }
+/* Fix duplicate upload button */
+[data-testid="stFileUploader"] button { display: none !important; }
+[data-testid="stFileUploader"] label {
+    background: #18181b !important; border: 1px solid #27272a !important;
+    color: #a1a1aa !important; border-radius: 6px !important;
+    padding: 0.5rem 1rem !important; cursor: pointer !important;
+}
+[data-testid="stFileUploaderDropzone"] { background: #0f0f12 !important; }
+[data-testid="stFileUploaderDropzoneInstructions"] { color: #52525b !important; }
 .stTextInput > div > div > input {
     background: #18181b !important; border: 1px solid #27272a !important;
     color: #fafafa !important; border-radius: 6px !important;
@@ -112,8 +124,7 @@ def get_user_credits():
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## 🚢 DocExtract Pro")
-    st.markdown("*Enterprise Logistik-KI*")
+    st.markdown("## DocExtract Pro")
     st.divider()
 
     if is_logged_in():
@@ -135,11 +146,11 @@ with st.sidebar:
         st.markdown("<br>", unsafe_allow_html=True)
 
         nav_items = [
-            ("📄 Extrahieren",  "app"),
-            ("📊 Dashboard",    "dashboard"),
-            ("💳 Credits",      "billing"),
-            ("🔑 API Keys",     "api_keys"),
-            ("🔔 Webhooks",     "webhooks"),
+            ("Extrahieren",  "app"),
+            ("Dashboard",    "dashboard"),
+            ("Credits",      "billing"),
+            ("API Keys",     "api_keys"),
+            ("Webhooks",     "webhooks"),
         ]
         for label_nav, page in nav_items:
             active = "background:#eff6ff;border-left:3px solid #3b82f6;" if st.session_state.page == page else ""
@@ -166,7 +177,7 @@ with st.sidebar:
         st.metric("Session", f"{st.session_state.total_docs} Docs")
         st.metric("Ø Tempo", f"{avg:.1f}s")
 
-    st.caption("v3.0 · Powered by Claude AI")
+    st.caption("DocExtract Pro · v3.0")
 
 # ════════════════════════════════════════════════════════════════════════════════
 # LOGIN PAGE
@@ -246,7 +257,7 @@ def show_app():
     st.markdown("""
     <div class="hero">
         <h1>🚢 DocExtract Pro</h1>
-        <p>Logistikdokumente automatisch auslesen — kein Abtippen, 0 Fehler.</p>
+        <p>Strukturierte Daten aus Logistikdokumenten — sofort, präzise, skalierbar.</p>
     </div>
     """, unsafe_allow_html=True)
 
