@@ -5,3 +5,4 @@ instructor
 pydantic
 pdfplumber
 python-dotenv
+supabase
