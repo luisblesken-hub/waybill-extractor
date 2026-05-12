@@ -32,13 +32,16 @@ def sign_in(email, password):
 def reset_password(email):
     return get_client().auth.reset_password_email(email)
 
-def get_credits(user_id):
-    sb = get_client()
+def get_credits(user_id: str) -> int:
     ssb = get_service_client()
-    res = sb.table("credits").select("balance").eq("user_id", user_id).execute()
+    res = ssb.table("credits").select("balance").eq("user_id", user_id).execute()
     if res.data:
         return res.data[0]["balance"]
-    ssb.table("credits").insert({"user_id": user_id, "balance": 0}).execute()
+    # New user — initialise with 0 credits (trigger should handle this, fallback here)
+    try:
+        ssb.table("credits").insert({"user_id": user_id, "balance": 0}).execute()
+    except Exception:
+        pass
     return 0
 
 def add_credits(user_id, amount):
