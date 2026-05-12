@@ -42,64 +42,68 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 *, html, body, [class*="css"] {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
-    -webkit-font-smoothing: antialiased;
 }
-.stApp, [data-testid="stAppViewContainer"],
-[data-testid="stHeader"], header { background: #09090b !important; }
-[data-testid="stToolbar"] { display: none !important; }
-[data-testid="stDecoration"] { display: none !important; }
-[data-testid="stSidebar"] { background: #0f0f12 !important; border-right: 1px solid #1f1f23 !important; }
-[data-testid="stSidebar"] * { color: #a1a1aa !important; }
-[data-testid="stSidebar"] h2 { color: #fafafa !important; }
-.stMarkdown p, .stText { color: #a1a1aa; }
-h1,h2,h3,h4 { color: #fafafa !important; letter-spacing: -0.02em; }
 footer, #MainMenu { visibility: hidden !important; }
-hr { border-color: #1f1f23 !important; }
-/* Fix duplicate upload button */
-[data-testid="stFileUploader"] button { display: none !important; }
-[data-testid="stFileUploader"] label {
-    background: #18181b !important; border: 1px solid #27272a !important;
-    color: #a1a1aa !important; border-radius: 6px !important;
-    padding: 0.5rem 1rem !important; cursor: pointer !important;
+[data-testid="stToolbar"] { display: none !important; }
+
+/* Force light mode — override system dark mode */
+html, body, [data-testid="stAppViewContainer"],
+[data-testid="stApp"], .stApp,
+[class*="main"], [class*="block-container"] {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+    color-scheme: light !important;
 }
-[data-testid="stFileUploaderDropzone"] { background: #0f0f12 !important; }
-[data-testid="stFileUploaderDropzoneInstructions"] { color: #52525b !important; }
-.stTextInput > div > div > input {
-    background: #18181b !important; border: 1px solid #27272a !important;
-    color: #fafafa !important; border-radius: 6px !important;
+[data-testid="stSidebar"] {
+    background-color: #ffffff !important;
+    border-right: 1px solid #e2e8f0 !important;
 }
-.stTextInput > div > div > input:focus { border-color: #22d3ee !important; }
-.stButton > button {
-    background: #18181b !important; border: 1px solid #27272a !important;
-    color: #fafafa !important; border-radius: 6px !important; font-weight: 500 !important;
+[data-testid="stSidebar"] * { color: #374151 !important; }
+[data-testid="stSidebar"] h2 { color: #0f172a !important; font-weight: 700 !important; }
+
+/* Inputs light */
+input, textarea, select {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #d1d5db !important;
 }
-.stButton > button:hover { border-color: #52525b !important; }
-.stButton > button[kind="primary"] { background: #fafafa !important; color: #09090b !important; border-color: transparent !important; font-weight: 600 !important; }
-[data-testid="stFileUploader"] { background: #0f0f12 !important; border: 1px dashed #27272a !important; border-radius: 8px !important; }
-[data-testid="stDownloadButton"] > button { background: #18181b !important; border: 1px solid #27272a !important; color: #a1a1aa !important; border-radius: 6px !important; }
-[data-testid="stExpander"] { background: #0f0f12 !important; border: 1px solid #1f1f23 !important; border-radius: 8px !important; }
-.stTabs [data-baseweb="tab-list"] { background: #18181b !important; border-radius: 8px !important; }
-.stTabs [data-baseweb="tab"] { color: #71717a !important; }
-.stTabs [aria-selected="true"] { color: #fafafa !important; background: #09090b !important; border-radius: 6px !important; }
-[data-testid="stMetric"] { background: #0f0f12 !important; border: 1px solid #1f1f23 !important; border-radius: 8px !important; padding: 1rem !important; }
-[data-testid="stMetricLabel"] { color: #52525b !important; }
-[data-testid="stMetricValue"] { color: #fafafa !important; }
-[data-testid="stTable"] th { background: #18181b !important; color: #71717a !important; font-size: 0.72rem !important; text-transform: uppercase !important; }
-[data-testid="stTable"] td { background: #09090b !important; color: #a1a1aa !important; border-color: #18181b !important; }
-.hero { background: #0f0f12; border: 1px solid #1f1f23; padding: 1.75rem 2rem; border-radius: 10px; margin-bottom: 1.5rem; }
-.hero h1 { margin: 0; font-size: 1.6rem; font-weight: 700; color: #fafafa; letter-spacing: -0.03em; }
-.hero p  { margin: 0.4rem 0 0; color: #71717a; font-size: 0.9rem; }
-.stat-box { background: #0f0f12; border: 1px solid #1f1f23; border-radius: 8px; padding: 1.1rem; text-align: center; }
-.stat-num { font-size: 1.6rem; font-weight: 700; color: #fafafa; letter-spacing: -0.03em; }
-.stat-lbl { font-size: 0.68rem; color: #52525b; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.2rem; }
-.credit-box { background: #0c1a1f; border: 1px solid #164e63; border-radius: 8px; padding: 1.25rem; color: #22d3ee; text-align: center; }
-.credit-num { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.04em; }
+
+/* Cards */
+[data-testid="stExpander"],
+[data-testid="stForm"] {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+/* Tab list */
+[data-baseweb="tab-list"] { background: #f1f5f9 !important; }
+[aria-selected="true"] { background: #ffffff !important; color: #0f172a !important; }
+
+/* Markdown text */
+p, li, span, label { color: #374151 !important; }
+h1, h2, h3, h4, h5 { color: #0f172a !important; }
+
+.hero {
+    background: linear-gradient(135deg, #1e3a5f 0%, #1d4ed8 100%);
+    padding: 1.75rem 2rem; border-radius: 10px; margin-bottom: 1.5rem;
+}
+.hero h1 { margin: 0; font-size: 1.6rem; font-weight: 700; color: #ffffff !important; letter-spacing: -0.03em; }
+.hero p  { margin: 0.4rem 0 0; color: rgba(255,255,255,0.8) !important; font-size: 0.9rem; }
+
+.stat-box { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.1rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.stat-num { font-size: 1.6rem; font-weight: 700; color: #1d4ed8; letter-spacing: -0.03em; }
+.stat-lbl { font-size: 0.68rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.2rem; }
+
+.credit-box { background: linear-gradient(135deg, #1d4ed8, #2563eb); border-radius: 8px; padding: 1.25rem; text-align: center; }
+.credit-num { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.04em; color: white !important; }
+
 .field-group { margin-bottom: 0.75rem; }
-.field-label { font-size: 0.65rem; font-weight: 600; color: #52525b; text-transform: uppercase; letter-spacing: 0.07em; }
-.field-value { font-size: 0.875rem; font-weight: 500; color: #e4e4e7; margin-top: 2px; }
-.field-empty { font-size: 0.875rem; color: #27272a; }
-.quality-bar { height: 2px; border-radius: 2px; background: #18181b; overflow: hidden; margin-top: 0.4rem; }
-.quality-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #22d3ee, #6366f1); }
+.field-label { font-size: 0.65rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.07em; }
+.field-value { font-size: 0.875rem; font-weight: 500; color: #0f172a; margin-top: 2px; }
+.field-empty { font-size: 0.875rem; color: #cbd5e1; }
+
+.quality-bar { height: 4px; border-radius: 2px; background: #f1f5f9; overflow: hidden; margin-top: 0.4rem; }
+.quality-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #1d4ed8, #0891b2); }
 </style>
 """, unsafe_allow_html=True)
 
@@ -187,7 +191,7 @@ def show_login():
     st.markdown("""
     <div class="hero">
         <h1>🚢 DocExtract Pro</h1>
-        <p>Enterprise Logistik-Dokumentenextraktion — KI-powered.</p>
+        <p>Strukturierte Daten aus Logistikdokumenten — sofort, präzise, skalierbar.</p>
     </div>
     """, unsafe_allow_html=True)
 
